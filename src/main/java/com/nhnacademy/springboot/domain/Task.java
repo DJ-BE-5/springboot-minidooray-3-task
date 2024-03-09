@@ -18,7 +18,6 @@ public class Task {
     private Long id;
 
     @ManyToOne
-    @NotNull
     @JoinColumn(name = "project_id", nullable = false)
     private Project project;
 

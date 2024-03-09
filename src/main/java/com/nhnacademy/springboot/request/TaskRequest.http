@@ -1,1 +1,56 @@
 ###
+
+POST http://localhost:8082/projects/1/tasks
+Content-Type: application/json
+X-USER-ID: 1
+
+{
+  "id": 1,
+  "title": "todo",
+  "content": "task",
+  "accountId": "1"
+}
+
+###
+
+POST http://localhost:8082/projects/1/tasks
+Content-Type: application/json
+X-USER-ID: 1
+
+{
+  "id": 2,
+  "title": "todo2",
+  "content": "task2",
+  "accountId": "1"
+}
+
+###
+
+GET http://localhost:8082/tasks/1
+Content-Type: application/json
+X-USER-ID: 1
+
+###
+
+GET http://localhost:8082/projects/1/tasks
+Content-Type: application/json
+X-USER-ID: 2
+
+###
+
+PUT http://localhost:8082/tasks/1
+Content-Type: application/json
+X-USER-ID: 2
+
+{
+  "id": 1,
+  "title": "todo3",
+  "content": "task3",
+  "accountId": "1"
+}
+
+###
+
+DELETE http://localhost:8082/tasks/1
+Content-Type: application/json
+X-USER-ID: 2

@@ -1,0 +1,53 @@
+###
+
+POST http://localhost:8082/tasks/1/comments
+Content-Type: application/json
+X-USER-ID: 2
+
+{
+  "id": 1,
+  "title": "done",
+  "content": "done"
+}
+
+###
+
+POST http://localhost:8082/tasks/1/comments
+Content-Type: application/json
+X-USER-ID: 2
+
+{
+  "id": 1,
+  "title": "test",
+  "content": "test"
+}
+
+###
+
+GET http://localhost:8082/tasks/1/comments
+Content-Type: application/json
+X-USER-ID: 1
+
+###
+
+GET http://localhost:8082/comments/1
+Content-Type: application/json
+X-USER-ID: 1
+
+###
+
+PUT http://localhost:8082/comments/1
+Content-Type: application/json
+X-USER-ID: 1
+
+{
+  "id": 1,
+  "title": "hihi",
+  "content": "byebye"
+}
+
+###
+
+DELETE http://localhost:8082/comments/1
+Content-Type: application/json
+X-USER-ID: 1

@@ -108,7 +108,7 @@ public class ProjectController {
         if (Objects.isNull(project)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found : " + projectId);
         }
-        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(projectId, xUserId))) {
+        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(projectId, xUserId)) && !project.getAccountId().equals(xUserId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         if (bindingResult.hasErrors()) {

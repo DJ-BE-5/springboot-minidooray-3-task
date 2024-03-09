@@ -33,27 +33,27 @@ public class CommentController {
     @GetMapping(value = "/comments/{commentId}")
     public ResponseEntity<Comment> getComment(@PathVariable Long commentId,
                                               @RequestHeader(name = "X-USER-ID") String xUserId) {
-        Comment comment = commentRepository.getReferenceById(commentId);
-        Task task = taskRepository.getReferenceById(comment.getTask().getId());
+        Comment comment = commentRepository.getCommentById(commentId);
+        Task task = taskRepository.getTaskById(comment.getTask().getId());
         if (Objects.isNull(task)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found : " + task.getId());
         }
         if (Objects.isNull(comment)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment Not Found : " + commentId);
         }
-        if (Objects.isNull(taskRepository.findProjectMemberByTask_ProjectIdAndAccountId(task, xUserId))) {
+        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getProject().getId(), xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-        return ResponseEntity.ok(commentRepository.getReferenceById(commentId));
+        return ResponseEntity.ok(commentRepository.getCommentById(commentId));
     }
 
     @GetMapping(value = "/tasks/{taskId}/comments")
     public ResponseEntity<List<Comment>> getComments(@PathVariable Long taskId,
                                                      @RequestHeader(name = "X-USER-ID") String xUserId) {
-        Task task = taskRepository.getReferenceById(taskId);
+        Task task = taskRepository.getTaskById(taskId);
         if (Objects.isNull(task)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found : " + taskId);
-        } else if (Objects.isNull(taskRepository.findProjectMemberByTask_ProjectIdAndAccountId(task, xUserId))) {
+        } else if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getProject().getId(), xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         return ResponseEntity.ok(commentRepository.findAllByTask(task));
@@ -64,16 +64,17 @@ public class CommentController {
                                                  @RequestHeader(name = "X-USER-ID") String xUserId,
                                                  @RequestBody @Valid Comment comment,
                                                  BindingResult bindingResult) {
-        Task task = taskRepository.getReferenceById(taskId);
+        Task task = taskRepository.getTaskById(taskId);
         if (Objects.isNull(task)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found : " + task.getId());
         }
-        if (Objects.isNull(taskRepository.findProjectMemberByTask_ProjectIdAndAccountId(task, xUserId))) {
+        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getProject().getId(), xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+        comment.setTask(task);
         return ResponseEntity.ok(commentRepository.save(comment));
     }
 
@@ -82,29 +83,30 @@ public class CommentController {
                                                  @RequestHeader(name = "X-USER-ID") String xUserId,
                                                  @RequestBody @Valid Comment comment,
                                                  BindingResult bindingResult) {
-        Comment comments = commentRepository.getReferenceById(commentId);
+        Comment comments = commentRepository.getCommentById(commentId);
         if (Objects.isNull(comments)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment Not Found : " + commentId);
         }
-        Task task = taskRepository.getReferenceById(comments.getTask().getId());
-        if (Objects.isNull(taskRepository.findProjectMemberByTask_ProjectIdAndAccountId(task, xUserId))) {
+        Task task = taskRepository.getTaskById(comments.getTask().getId());
+        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getProject().getId(), xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+        comment.setTask(comments.getTask());
         return ResponseEntity.ok(commentRepository.save(comment));
     }
 
     @DeleteMapping(value = "/comments/{commentId}")
     public ResponseEntity<Comment> deleteComment(@PathVariable Long commentId,
                                                  @RequestHeader(name = "X-USER-ID")String xUserId) {
-        Comment comment = commentRepository.getReferenceById(commentId);
+        Comment comment = commentRepository.getCommentById(commentId);
         if (Objects.isNull(comment)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Comment Not Found : " + commentId);
         }
-        Task task = taskRepository.getReferenceById(comment.getTask().getId());
-        if (Objects.isNull(taskRepository.findProjectMemberByTask_ProjectIdAndAccountId(task, xUserId))) {
+        Task task = taskRepository.getTaskById(comment.getTask().getId());
+        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getProject().getId(), xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         commentRepository.delete(comment);

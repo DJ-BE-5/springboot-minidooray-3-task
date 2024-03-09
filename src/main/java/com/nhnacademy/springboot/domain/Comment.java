@@ -18,7 +18,6 @@ public class Comment {
     private Long id;
 
     @ManyToOne
-    @NotNull
     @JoinColumn(name = "task_id", nullable = false)
     private Task task;
 

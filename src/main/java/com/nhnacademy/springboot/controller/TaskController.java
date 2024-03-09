@@ -30,11 +30,11 @@ public class TaskController {
     @GetMapping(value = "/tasks/{taskId}")
     public ResponseEntity<Task> getTask(@PathVariable Long taskId,
                                         @RequestHeader(name = "X-USER-ID") String xUserId) {
-        if (Objects.isNull(taskRepository.getReferenceById(taskId))) {
+        if (Objects.isNull(taskRepository.getTaskById(taskId))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found : " + taskId);
         }
-        Task task = taskRepository.getReferenceById(taskId);
-        if (Objects.isNull(taskRepository.findProjectMemberByTask_ProjectIdAndAccountId(task, xUserId))) {
+        Task task = taskRepository.getTaskById(taskId);
+        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getProject().getId(), xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         return ResponseEntity.ok(task);
@@ -72,6 +72,7 @@ public class TaskController {
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+        task.setProject(project);
         return ResponseEntity.ok(taskRepository.save(task));
     }
 
@@ -80,15 +81,17 @@ public class TaskController {
                                            @RequestBody Task task,
                                            @RequestHeader(name = "X-USER-ID") String xUserId,
                                            BindingResult bindingResult) {
-        if (Objects.isNull(taskRepository.getReferenceById(taskId))) {
+        Task tasks = taskRepository.getTaskById(taskId);
+        if (Objects.isNull(taskRepository.getTaskById(taskId))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found : " + taskId);
         }
-        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getProject().getId(), xUserId))) {
+        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(tasks.getId(), xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
+        task.setProject(tasks.getProject());
         task = taskRepository.save(task);
         return ResponseEntity.ok(task);
     }
@@ -96,7 +99,7 @@ public class TaskController {
     @DeleteMapping(value = "/tasks/{taskId}")
     public ResponseEntity<Task> deleteTask(@PathVariable Long taskId,
                                            @RequestHeader(name = "X-USER-ID") String xUserId) {
-        Task task = taskRepository.getReferenceById(taskId);
+        Task task = taskRepository.getTaskById(taskId);
         if (Objects.isNull(task)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found : " + taskId);
         }
