@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Table(name = "comment")
 public class Comment {
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "content_id", nullable = false)
     private Long id;
 

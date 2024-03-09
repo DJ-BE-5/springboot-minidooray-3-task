@@ -32,9 +32,6 @@ public class ProjectController {
     @GetMapping(value = "/projects")
     public ResponseEntity<List<Project>> getProjects(@RequestHeader(name = "X-USER-ID") String xUserId) {
         List<Project> projectList = projectRepository.findProjectsByAccountId(xUserId);
-        if(Objects.isNull(projectRepository.findAllByAccountId(xUserId))) {
-
-        }
         if (Objects.isNull(projectList)) {
             projectList = new ArrayList<>();
             return ResponseEntity.ok(projectList);
@@ -50,7 +47,7 @@ public class ProjectController {
         if (!projectRepository.existsById(projectId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found : " + projectId);
         }
-        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(projectId, xUserId)) && !project.getAccountId().equals(xUserId)) {
+        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(projectId, xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         return ResponseEntity.ok(project);
@@ -70,10 +67,10 @@ public class ProjectController {
         ProjectMember projectMember = new ProjectMember();
         projectMember.setProject(project);
         projectMember.setPk(pk);
-        Project projects = projectRepository.save(project);
+        projectRepository.save(project);
         projectMemberRepository.save(projectMember);
 
-        return ResponseEntity.created(URI.create("/projects/" + projects.getId())).build();
+        return ResponseEntity.created(URI.create("/projects")).build();
     }
 
     @PostMapping(value = "/projects/{projectId}/members")
@@ -82,7 +79,7 @@ public class ProjectController {
                                                                @RequestHeader(name = "X-USER-ID") String xUserId,
                                                                BindingResult bindingResult) {
         Project project = projectRepository.getProjectById(projectId);
-        if (!project.getAccountId().equals(xUserId)) {
+        if (!projectRepository.existsProjectByAccountId(xUserId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         if (bindingResult.hasErrors()) {
@@ -99,8 +96,8 @@ public class ProjectController {
         return ResponseEntity.ok(projectMembers);
     }
 
-    @PutMapping(value = "/projects/{projectId}/state")
-    public ResponseEntity<Project> updateProjectState(@PathVariable Long projectId,
+    @PutMapping(value = "/projects/{projectId}")
+    public ResponseEntity<Project> modifyProjectState(@PathVariable Long projectId,
                                                       @RequestBody @Valid ProjectStateRequest projectStateRequest,
                                                       @RequestHeader(name = "X-USER-ID") String xUserId,
                                                       BindingResult bindingResult) {
@@ -108,7 +105,7 @@ public class ProjectController {
         if (Objects.isNull(project)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found : " + projectId);
         }
-        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(projectId, xUserId)) && !project.getAccountId().equals(xUserId)) {
+        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(projectId, xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         if (bindingResult.hasErrors()) {

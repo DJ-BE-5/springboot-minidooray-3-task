@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Table(name = "task")
 public class Task {
     @Id
-    @NotNull
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id", nullable = false)
     private Long id;
 

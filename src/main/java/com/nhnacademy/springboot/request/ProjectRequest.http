@@ -3,7 +3,6 @@ Content-Type: application/json
 X-USER-ID: 1
 
 {
-  "id" : 1,
   "title": "hello",
   "content": "world",
   "state": "ACTIVE",
@@ -48,7 +47,7 @@ X-USER-ID: 1
 
 ###
 
-PUT http://localhost:8082/projects/2/state
+PUT http://localhost:8082/projects/2
 Content-Type: application/json
 X-USER-ID: 1
 
