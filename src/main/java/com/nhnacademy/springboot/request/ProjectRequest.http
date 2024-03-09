@@ -1,0 +1,57 @@
+POST http://localhost:8082/projects
+Content-Type: application/json
+X-USER-ID: 1
+
+{
+  "id" : 1,
+  "title": "hello",
+  "content": "world",
+  "state": "ACTIVE",
+  "accountId": "1"
+}
+
+###
+
+POST http://localhost:8082/projects
+Content-Type: application/json
+X-USER-ID: 1
+
+{
+  "id": 2,
+  "title": "byebye",
+  "content": "myblue",
+  "state": "ACTIVE",
+  "accountId": "1"
+}
+
+###
+
+GET http://localhost:8082/projects
+Content-Type: application/json
+X-USER-ID: 1
+
+###
+
+GET http://localhost:8082/projects/1
+Content-Type: application/json
+X-USER-ID: 2
+
+###
+
+POST http://localhost:8082/projects/1/members
+Content-Type: application/json
+X-USER-ID: 1
+
+{
+    "memberId": "2"
+}
+
+###
+
+PUT http://localhost:8082/projects/2/state
+Content-Type: application/json
+X-USER-ID: 1
+
+{
+  "state": "SLEEP"
+}
