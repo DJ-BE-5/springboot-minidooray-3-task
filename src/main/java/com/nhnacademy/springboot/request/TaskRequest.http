@@ -54,3 +54,15 @@ X-USER-ID: 2
 DELETE http://localhost:8082/tasks/1
 Content-Type: application/json
 X-USER-ID: 2
+
+###
+
+POST http://localhost:8082/projects/4/tasks
+Content-Type: application/json
+Accept: application/json
+X-USER-ID: user1
+
+{
+  "title": "gdgdg",
+  "content": "test"
+}

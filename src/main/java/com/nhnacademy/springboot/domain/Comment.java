@@ -14,8 +14,8 @@ import javax.persistence.*;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "content_id", nullable = false)
-    private Long id;
+    @Column(name = "comment_id", nullable = false)
+    private Long commentId;
 
     @ManyToOne
     @JoinColumn(name = "task_id", nullable = false)

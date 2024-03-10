@@ -15,7 +15,7 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "task_id", nullable = false)
-    private Long id;
+    private Long taskId;
 
     @ManyToOne
     @JoinColumn(name = "project_id", nullable = false)
@@ -23,7 +23,7 @@ public class Task {
 
     @NotNull
     @Column(name = "account_id", nullable = false)
-    private String accountId;
+    private String memberId;
 
     @NotNull
     @Column(name = "title",nullable = false)

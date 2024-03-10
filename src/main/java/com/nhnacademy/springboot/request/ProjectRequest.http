@@ -5,7 +5,7 @@ X-USER-ID: 1
 {
   "title": "hello",
   "content": "world",
-  "state": "ACTIVE",
+  "state": "active",
   "accountId": "1"
 }
 
@@ -19,7 +19,7 @@ X-USER-ID: 1
   "id": 2,
   "title": "byebye",
   "content": "myblue",
-  "state": "ACTIVE",
+  "state": "active",
   "accountId": "1"
 }
 
@@ -52,5 +52,5 @@ Content-Type: application/json
 X-USER-ID: 1
 
 {
-  "state": "SLEEP"
+  "state": "sleep"
 }

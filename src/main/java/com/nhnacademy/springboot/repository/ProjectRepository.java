@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface ProjectRepository extends ProjectRepositoryCustom, JpaRepository<Project, Long> {
-    Project getProjectById(Long projectId);
-    boolean existsProjectByAccountId(String accountId);
+    Project getProjectByProjectId(Long projectId);
+    boolean existsProjectByAdminId(String accountId);
 }

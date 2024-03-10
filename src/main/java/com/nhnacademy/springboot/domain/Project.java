@@ -16,10 +16,10 @@ public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "project_id", nullable = false)
-    private Long id;
+    private Long projectId;
 
     @Column(name = "account_id", nullable = false)
-    private String accountId;
+    private String adminId;
 
     @NotNull
     @Column(name = "title", nullable = false)
@@ -30,6 +30,6 @@ public class Project {
 
     @NotNull
     @ProjectState
-    @Column(name = "state", nullable = false, columnDefinition = "VARCHAR (10) DEFAULT 'ACTIVE' ")
+    @Column(name = "state", nullable = false, columnDefinition = "VARCHAR (10) DEFAULT 'active' ")
     private String state;
 }

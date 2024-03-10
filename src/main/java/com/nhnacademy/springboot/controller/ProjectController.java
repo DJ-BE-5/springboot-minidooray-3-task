@@ -43,7 +43,7 @@ public class ProjectController {
     @GetMapping(value = "/projects/{projectId}")
     public ResponseEntity<Project> getProject(@PathVariable Long projectId,
                                               @RequestHeader(name = "X-USER-ID") String xUserId) {
-        Project project = projectRepository.getProjectById(projectId);
+        Project project = projectRepository.getProjectByProjectId(projectId);
         if (!projectRepository.existsById(projectId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found : " + projectId);
         }
@@ -57,12 +57,12 @@ public class ProjectController {
     public ResponseEntity<Project> createProject(@RequestBody @Valid Project project,
                                                  @RequestHeader(name = "X-USER-ID") String xUserId,
                                                  BindingResult bindingResult) {
-        project.setAccountId(xUserId);
+        project.setAdminId(xUserId);
         if (bindingResult.hasErrors()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Validation failed.");
         }
         ProjectMember.Pk pk = new ProjectMember.Pk();
-        pk.setProjectId(project.getId());
+        pk.setProjectId(project.getProjectId());
         pk.setAccountId(xUserId);
         ProjectMember projectMember = new ProjectMember();
         projectMember.setProject(project);
@@ -78,8 +78,8 @@ public class ProjectController {
                                                                @RequestBody@Valid ProjectMemberRequest projectMemberRequest,
                                                                @RequestHeader(name = "X-USER-ID") String xUserId,
                                                                BindingResult bindingResult) {
-        Project project = projectRepository.getProjectById(projectId);
-        if (!projectRepository.existsProjectByAccountId(xUserId)) {
+        Project project = projectRepository.getProjectByProjectId(projectId);
+        if (!projectRepository.existsProjectByAdminId(xUserId)) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         if (bindingResult.hasErrors()) {
@@ -101,7 +101,7 @@ public class ProjectController {
                                                       @RequestBody @Valid ProjectStateRequest projectStateRequest,
                                                       @RequestHeader(name = "X-USER-ID") String xUserId,
                                                       BindingResult bindingResult) {
-        Project project = projectRepository.getProjectById(projectId);
+        Project project = projectRepository.getProjectByProjectId(projectId);
         if (Objects.isNull(project)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found : " + projectId);
         }

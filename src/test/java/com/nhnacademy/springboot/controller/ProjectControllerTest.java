@@ -50,11 +50,11 @@ public class ProjectControllerTest {
     @DisplayName("프로젝트 생성")
     void createProjectTest() {
         Project project = new Project();
-        project.setId(1L);
+        project.setProjectId(1L);
         project.setTitle("test");
         project.setContent("test");
-        project.setAccountId("test");
-        project.setState("ACTIVE");
+        project.setAdminId("test");
+        project.setState("active");
         when(projectRepository.save(project)).thenReturn(project);
         ProjectMember projectMember = new ProjectMember();
         when(projectMemberRepository.save(projectMember)).thenReturn(projectMember);
@@ -75,11 +75,11 @@ public class ProjectControllerTest {
     @DisplayName("프로젝트 생성 - Bad Request")
     void createProjectTest_BadRequest() {
         Project project = new Project();
-        project.setId(1L);
+        project.setProjectId(1L);
         project.setTitle("test");
         project.setContent("test");
-        project.setAccountId("test");
-        project.setState("ACTIVE");
+        project.setAdminId("test");
+        project.setState("active");
         when(projectRepository.save(project)).thenReturn(project);
 
         try {
@@ -115,7 +115,7 @@ public class ProjectControllerTest {
     void getProjectTest() {
         Project project = new Project();
         ProjectMember projectMember = new ProjectMember();
-        when(projectRepository.getProjectById(anyLong())).thenReturn(project);
+        when(projectRepository.getProjectByProjectId(anyLong())).thenReturn(project);
         when(projectRepository.existsById(anyLong())).thenReturn(true);
         when(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(anyLong(), anyString())).thenReturn(projectMember);
 
@@ -135,7 +135,7 @@ public class ProjectControllerTest {
     void getProjectTest_NotFound() {
         Project project = new Project();
         ProjectMember projectMember = new ProjectMember();
-        when(projectRepository.getProjectById(anyLong())).thenReturn(project);
+        when(projectRepository.getProjectByProjectId(anyLong())).thenReturn(project);
         when(projectRepository.existsById(anyLong())).thenReturn(false);
         when(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(anyLong(), anyString())).thenReturn(projectMember);
 
@@ -155,7 +155,7 @@ public class ProjectControllerTest {
     void getProjectTest_Forbidden() {
         Project project = new Project();
         ProjectMember projectMember = new ProjectMember();
-        when(projectRepository.getProjectById(anyLong())).thenReturn(null);
+        when(projectRepository.getProjectByProjectId(anyLong())).thenReturn(null);
         when(projectRepository.existsById(anyLong())).thenReturn(true);
         when(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(anyLong(), anyString())).thenReturn(null);
 
@@ -175,8 +175,8 @@ public class ProjectControllerTest {
     void registerProjectMemberTest() {
         Project project = new Project();
         ProjectMember projectMember = new ProjectMember();
-        when(projectRepository.getProjectById(anyLong())).thenReturn(project);
-        when(projectRepository.existsProjectByAccountId(anyString())).thenReturn(true);
+        when(projectRepository.getProjectByProjectId(anyLong())).thenReturn(project);
+        when(projectRepository.existsProjectByAdminId(anyString())).thenReturn(true);
         when(projectMemberRepository.save(projectMember)).thenReturn(projectMember);
 
         try {
@@ -196,8 +196,8 @@ public class ProjectControllerTest {
     void registerProjectMemberTest_Forbidden() {
         Project project = new Project();
         ProjectMember projectMember = new ProjectMember();
-        when(projectRepository.getProjectById(anyLong())).thenReturn(project);
-        when(projectRepository.existsProjectByAccountId(anyString())).thenReturn(false);
+        when(projectRepository.getProjectByProjectId(anyLong())).thenReturn(project);
+        when(projectRepository.existsProjectByAdminId(anyString())).thenReturn(false);
         when(projectMemberRepository.save(projectMember)).thenReturn(projectMember);
 
         try {
@@ -217,8 +217,8 @@ public class ProjectControllerTest {
     void registerProjectMemberTest_BadRequest() {
         Project project = new Project();
         ProjectMember projectMember = new ProjectMember();
-        when(projectRepository.getProjectById(anyLong())).thenReturn(project);
-        when(projectRepository.existsProjectByAccountId(anyString())).thenReturn(false);
+        when(projectRepository.getProjectByProjectId(anyLong())).thenReturn(project);
+        when(projectRepository.existsProjectByAdminId(anyString())).thenReturn(false);
         when(projectMemberRepository.save(projectMember)).thenReturn(projectMember);
 
         try {
@@ -238,14 +238,14 @@ public class ProjectControllerTest {
     void modifyProjectStateTest() {
         Project project = new Project();
         ProjectMember projectMember = new ProjectMember();
-        when(projectRepository.getProjectById(anyLong())).thenReturn(project);
+        when(projectRepository.getProjectByProjectId(anyLong())).thenReturn(project);
         when(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(anyLong(), anyString())).thenReturn(projectMember);
         when(projectRepository.save(project)).thenReturn(project);
 
         try {
             mockMvc.perform(put("/projects/1")
                     .contentType(MediaType.APPLICATION_JSON)
-                    .content(objectMapper.writeValueAsString("SLEEP"))
+                    .content(objectMapper.writeValueAsString("sleep"))
                     .header("X-USER-ID", "1"))
                     .andExpect(status().isOk());
         } catch (Exception e) {
@@ -259,14 +259,14 @@ public class ProjectControllerTest {
     void modifyProjectStateTest_NotFound() {
         Project project = new Project();
         ProjectMember projectMember = new ProjectMember();
-        when(projectRepository.getProjectById(anyLong())).thenReturn(null);
+        when(projectRepository.getProjectByProjectId(anyLong())).thenReturn(null);
         when(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(anyLong(), anyString())).thenReturn(projectMember);
         when(projectRepository.save(project)).thenReturn(project);
 
         try {
             mockMvc.perform(put("/projects/1")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString("SLEEP"))
+                            .content(objectMapper.writeValueAsString("sleep"))
                             .header("X-USER-ID", "1"))
                     .andExpect(status().isNotFound());
         } catch (Exception e) {
@@ -280,14 +280,14 @@ public class ProjectControllerTest {
     void modifyProjectStateTest_Forbidden() {
         Project project = new Project();
         ProjectMember projectMember = new ProjectMember();
-        when(projectRepository.getProjectById(anyLong())).thenReturn(project);
+        when(projectRepository.getProjectByProjectId(anyLong())).thenReturn(project);
         when(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(anyLong(), anyString())).thenReturn(null);
         when(projectRepository.save(project)).thenReturn(project);
 
         try {
             mockMvc.perform(put("/projects/1")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString("SLEEP"))
+                            .content(objectMapper.writeValueAsString("sleep"))
                             .header("X-USER-ID", "1"))
                     .andExpect(status().isForbidden());
         } catch (Exception e) {
@@ -301,14 +301,14 @@ public class ProjectControllerTest {
     void modifyProjectStateTest_BadRequest() {
         Project project = new Project();
         ProjectMember projectMember = new ProjectMember();
-        when(projectRepository.getProjectById(anyLong())).thenReturn(project);
+        when(projectRepository.getProjectByProjectId(anyLong())).thenReturn(project);
         when(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(anyLong(), anyString())).thenReturn(null);
         when(projectRepository.save(project)).thenReturn(project);
 
         try {
             mockMvc.perform(put("/projects/1")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString("SLEEP")))
+                            .content(objectMapper.writeValueAsString("sleep")))
                     .andExpect(status().isBadRequest());
         } catch (Exception e) {
             throw new RuntimeException(e);

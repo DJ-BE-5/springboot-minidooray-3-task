@@ -10,9 +10,9 @@ public class ProjectStateValidator implements ConstraintValidator<ProjectState, 
         if(Objects.isNull(state)) {
             return true;
         }
-        if(state.equals("ACTIVE") || state.equals("SLEEP") || state.equals("CLOSE")) {
+        if(state.equals("active") || state.equals("sleep") || state.equals("close")) {
             return true;
-        }
-        return false;
+        }        return false;
+
     }
 }
