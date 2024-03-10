@@ -32,7 +32,7 @@ public class TaskController {
     public ResponseEntity<Task> getTask(@PathVariable Long taskId,
                                         @RequestHeader(name = "X-USER-ID") String xUserId) {
         if (Objects.isNull(taskRepository.getTaskByTaskId(taskId))) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found : " + taskId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found");
         }
         Task task = taskRepository.getTaskByTaskId(taskId);
         if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getProject().getProjectId(), xUserId))) {
@@ -46,7 +46,7 @@ public class TaskController {
                                                @RequestHeader(name = "X-USER-ID") String xUserId) {
         Project project = projectRepository.getProjectByProjectId(projectId);
         if (Objects.isNull(project)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found : " + projectId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found");
         }
         if (Objects.isNull(taskRepository.findAllByProject(project))) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tasks Not Found");
@@ -65,7 +65,7 @@ public class TaskController {
                                            BindingResult bindingResult) {
         Project project = projectRepository.getProjectByProjectId(projectId);
         if (Objects.isNull(project)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found : " + projectId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found");
         }
         if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(projectId, xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -85,9 +85,9 @@ public class TaskController {
                                            BindingResult bindingResult) {
         Task task = taskRepository.getTaskByTaskId(taskId);
         if (Objects.isNull(taskRepository.getTaskByTaskId(taskId))) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found : " + taskId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found");
         }
-        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getTaskId(), xUserId))) {
+        if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getProject().getProjectId(), xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
         if (bindingResult.hasErrors()) {
@@ -104,7 +104,7 @@ public class TaskController {
                                            @RequestHeader(name = "X-USER-ID") String xUserId) {
         Task task = taskRepository.getTaskByTaskId(taskId);
         if (Objects.isNull(task)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found : " + taskId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Task Not Found");
         }
         if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(task.getProject().getProjectId(), xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);

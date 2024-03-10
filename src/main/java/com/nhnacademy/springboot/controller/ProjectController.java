@@ -45,7 +45,7 @@ public class ProjectController {
                                               @RequestHeader(name = "X-USER-ID") String xUserId) {
         Project project = projectRepository.getProjectByProjectId(projectId);
         if (!projectRepository.existsById(projectId)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found : " + projectId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found");
         }
         if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(projectId, xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);
@@ -103,7 +103,7 @@ public class ProjectController {
                                                       BindingResult bindingResult) {
         Project project = projectRepository.getProjectByProjectId(projectId);
         if (Objects.isNull(project)) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found : " + projectId);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Project Not Found");
         }
         if (Objects.isNull(projectMemberRepository.findProjectMemberByPk_ProjectIdAndPk_AccountId(projectId, xUserId))) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN);

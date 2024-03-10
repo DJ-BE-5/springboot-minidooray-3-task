@@ -3,7 +3,9 @@ package com.nhnacademy.springboot.repository;
 import com.nhnacademy.springboot.domain.*;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 
-public class TaskRepositoryImpl extends QuerydslRepositorySupport implements TaskRepositoryCustom {
+import java.util.Objects;
+
+    public class TaskRepositoryImpl extends QuerydslRepositorySupport implements TaskRepositoryCustom {
 
     public TaskRepositoryImpl() {
         super(Task.class);
@@ -19,8 +21,10 @@ public class TaskRepositoryImpl extends QuerydslRepositorySupport implements Tas
         return from(qTask)
                 .innerJoin(qTask.project, project)
                 .innerJoin(project, projectMember.project)
-                .where(projectMember.pk.projectId.eq(project.id), projectMember.pk.accountId.eq(accountId))
+                .where(projectMember.pk.projectId.eq(project.projectId), projectMember.pk.accountId.eq(accountId))
                 .select(projectMember)
                 .fetchOne();
     }
+
+
 }
